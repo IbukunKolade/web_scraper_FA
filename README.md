@@ -34,7 +34,7 @@ The result is a panel of `(timestamp, wallet_1, wallet_2)` observations, one row
 
 ## Files
 
-- `streampay_pullscript_v2.py` — the scraper
+- `pullscript.py` — the scraper
 - `.github/workflows/daily.yml` — the schedule and runtime environment
 - `requirements.txt` — Python dependencies
 
