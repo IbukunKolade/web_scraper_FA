@@ -28,7 +28,7 @@ jobs:
         run: |
           # Creates the credential file from your GitHub Secret
           echo "$GOOGLE_CREDS" > service_account.json
-          python streampay_pullscript_v2.py
+          python pullscript.py
       - name: Upload Debug Screenshots
         if: always() # Runs even if the script crashes
         uses: actions/upload-artifact@v4
