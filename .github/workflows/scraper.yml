@@ -1,0 +1,38 @@
+name: Daily Wallet Scraper
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs every day at Midnight UTC
+  workflow_dispatch:   # Allows manual triggers
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Tools & Browser
+        run: |
+          pip install playwright gspread oauth2client
+          playwright install chromium
+          playwright install-deps chromium
+      - name: Run Scraper
+        env:
+          GOOGLE_CREDS: ${{ secrets.GOOGLE_CREDS_JSON }}
+          PHONE_NUM: ${{ secrets.PHONE_NUM }}
+          STATIC_OTP: ${{ secrets.STATIC_OTP }}
+          SHEET_NAME: ${{ secrets.SHEET_NAME }}
+          LOGIN_URL: ${{ secrets.LOGIN_URL }}
+        run: |
+          # Creates the credential file from your GitHub Secret
+          echo "$GOOGLE_CREDS" > service_account.json
+          python streampay_pullscript_v2.py
+      - name: Upload Debug Screenshots
+        if: always() # Runs even if the script crashes
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-screenshots
+          path: error_*.png
+          retention-days: 7
